@@ -12,8 +12,9 @@ from subprocess import Popen, PIPE
 app = Flask(__name__, template_folder="templates")
 GoogleMaps(app)
 
-data = load_data_file('nordvpn.json')
 config = load_data_file('config.json')
+gen_data_file(config['config_path'], 'nordvpn.json')
+data = load_data_file('nordvpn.json')
 
 def update_config(key, value):
     global config
@@ -101,7 +102,6 @@ def connect_node(name):
     return jsonify({'result': tries})
 
 if __name__ == "__main__":
-    gen_data_file(config['config_path'], 'nordvpn.json')
     if config['auto_connect'] == 1:
         connect(config['last_connected'])
     app.run(debug=True)
