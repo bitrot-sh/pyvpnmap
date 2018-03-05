@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+            {{sndmap.js}}
+			<script src="/static/jquery-3.3.1.min.js"></script>
+   			<script>
+				function ping(ip) {
+					$.getJSON('/ping/'+ip, function(data) {
+						alert(data['result']);
+					});
+				}
+				function connect(name) {
+					$.getJSON('/connect/'+name, function(data) {
+						console.log(data['result']);
+						alert('Connecting to '+name);
+						var reload = setTimeout(function() {
+							location.reload();
+						}, 5000);
+					});
+				}
+				function update_ip() {
+					$.getJSON('/api/current_ip', function(data) {
+						$('#cur_ip').html("<h1><strong>Current Public IP: </strong>" + data['ip'] + "</h1>");
+						update_location(data['ip']);
+					});
+				}
+				function update_location(ip) {
+					$.getJSON('/api/location_data/'+ip, function(data) {
+						$('#cur_ip').append("<h2>" + data['city'] + ", " + data['country'] + "</h2>")
+					});
+				}
+			</script>
+ 
+	</head>
+    <body>
+		<h1>NordVPN Exit Nodes</h1>
+		<div id="cur_ip"></div>
+        {{sndmap.html}}
+		<script>
+		$(document).ready(function() {
+			update_ip();
+		});
+		</script>
+	    </body>
+</html>
